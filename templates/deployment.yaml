@@ -1,0 +1,110 @@
+{{- if and .Values.config.authtokenSecret .Values.config.authtoken -}}
+{{ fail (printf "ERROR: only one of .Values.config.authTokenSecret and .Values.config.authtoken must be defined") }}
+{{- end -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "prometheus-pagerduty-exporter.fullname" . }}
+  labels:
+    {{- include "prometheus-pagerduty-exporter.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "prometheus-pagerduty-exporter.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "prometheus-pagerduty-exporter.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "prometheus-pagerduty-exporter.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          args:
+          {{- if .Values.config.debug }}
+          - "--debug"
+          {{- end }}
+          {{- if .Values.config.verbose }}
+          - "--verbose"
+          {{- end }}
+          {{- if .Values.config.logJsonFormat }}
+          - "--log.json"
+          {{- end }}
+          {{- if .Values.config.authtoken }}
+          - "--pagerduty.authtoken={{ .Values.config.authtoken }}"
+          {{- end }}
+          {{- if .Values.config.scheduleOverrideDuration }}
+          - "--pagerduty.schedule.override-duration={{ .Values.config.scheduleOverrideDuration }}"
+          {{- end }}
+          {{- if .Values.config.scheduleEntryTimeframe }}
+          - "--pagerduty.schedule.entry-timeframe={{ .Values.config.scheduleEntryTimeframe }}"
+          {{- end }}
+          {{- if .Values.config.scheduleEntryTimeformat }}
+          - "--pagerduty.schedule.entry-timeformat={{ .Values.config.scheduleEntryTimeformat }}"
+          {{- end }}
+          {{- if .Values.config.incidentTimeformat }}
+          - "--pagerduty.incident.timeformat={{ .Values.config.incidentTimeformat }}"
+          {{- end }}
+          {{- if .Values.config.disableTeams }}
+          - "--pagerduty.disable-teams"
+          {{- end }}
+          {{- if .Values.config.teamFilter }}
+          - "--pagerduty.team-filter={{ tpl .Values.config.teamFilter $ | join "," }}"
+          {{- end }}
+          {{- if .Values.config.maxConnections }}
+          - "--pagerduty.max-connections={{ .Values.config.maxConnections }}"
+          {{- end }}
+          {{- if .Values.config.scrapeTime }}
+          - "--scrape.time={{ .Values.config.scrapeTime }}"
+          {{- end }}
+          {{- if .Values.config.scrapeTimeLive }}
+          - "--scrape.time.live={{ .Values.config.scrapeTimeLive }}"
+          {{- end }}
+          env:
+          {{- if .Values.config.authtokenSecret }}
+          - name: PAGERDUTY_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.config.authtokenSecret.name }}
+                key: {{ .Values.config.authtokenSecret.key }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

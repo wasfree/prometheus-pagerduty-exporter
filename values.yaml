@@ -1,0 +1,116 @@
+# Default values for prometheus-pagerduty-exporter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: webdevops/pagerduty-exporter
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
+  # Specifies whether a PodSecurityPolicy should be created
+  pspEnabled: true
+
+config:
+  # Define if debug mode should be enabled
+  debug: false
+  # Define if verbose mode should be enabled
+  verbose: false
+  # Set the log output format to json
+  logJsonFormat: false
+  # PagerDuty auth token
+  authtoken: ""
+  # Specify PagerDuty auth token secret name and key
+  # authtokenSecret:
+  #   name: ""
+  #   key: ""
+  # PagerDuty timeframe for fetching schedule overrides
+  scheduleOverrideDuration: "48h"
+  # PagerDuty timeframe for fetching schedule entries
+  scheduleEntryTimeframe: "72h"
+  # PagerDuty schedule entry time format
+  scheduleEntryTimeformat: "Mon, 02 Jan 15:04 MST"
+  # PagerDuty incident time format
+  incidentTimeformat: "Mon, 02 Jan 15:04 MST"
+  # Set to true to disable checking PagerDuty teams
+  disableTeams: false
+  # Passes team ID as a list option when applicable
+  teamFilter: []
+  # Maximum numbers of TCP connections to PagerDuty API
+  maxConnections: "4"
+  # Scrape time
+  scrapeTime: "5m"
+  # Scrape time incidents and oncalls
+  scrapeTimeLive: "1m" 
+
+serviceMonitor:
+  # When set true then use a ServiceMonitor to configure scraping
+  enabled: false
+  # Set the namespace the ServiceMonitor should be deployed
+  # namespace: monitoring
+  # Set how frequently Prometheus should scrape
+  # interval: 30s
+  # Set path to cloudwatch-exporter telemtery-path
+  # telemetryPath: /metrics
+  # Set labels for the ServiceMonitor, use this to define your scrape label for Prometheus Operator
+  # labels:
+  # Set timeout for scrape
+  # timeout: 10s
+  # Set of labels to transfer from the Kubernetes Service onto the target
+  # targetLabels: []
+  # MetricRelabelConfigs to apply to samples before ingestion
+  # metricRelabelings: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
