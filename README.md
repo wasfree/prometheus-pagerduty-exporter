@@ -2,7 +2,7 @@
 
 A Prometheus exporter for [PagerDuty](https://www.pagerduty.com/) metrics.
 
-This chart bootstraps a PagerDuty Exporter deployment on a Kubernetes cluster using the Helm package manager.
+This chart bootstraps a [PagerDuty Exporter](https://github.com/webdevops/pagerduty-exporter) deployment on a Kubernetes cluster using the Helm package manager.
 
 ## Get Repo Info
 
