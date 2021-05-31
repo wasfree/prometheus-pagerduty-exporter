@@ -7,7 +7,7 @@ This chart bootstraps a PagerDuty Exporter deployment on a Kubernetes cluster us
 ## Get Repo Info
 
 ```console
-helm repo add pagerduty-exporter https://wasfree.github.io/prometheus-pagerduty-exporter
+helm repo add wasfree https://wasfree.github.io/prometheus-pagerduty-exporter
 helm repo update
 ```
 
