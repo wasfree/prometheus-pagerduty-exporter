@@ -3,7 +3,27 @@ entries:
   prometheus-pagerduty-exporter:
   - apiVersion: v2
     appVersion: 20.11.1
-    created: "2021-05-31T17:22:55.020036176+02:00"
+    created: "2021-06-02T16:23:59.222579472+02:00"
+    description: PagerDuty exporter for prometheus
+    digest: a4d54be5f3ade336517a7660c8a35e089a0888c668ecfa8dd1e94a295b6e1a60
+    home: https://github.com/webdevops/pagerduty-exporter/
+    keywords:
+    - pagerduty
+    - prometheus
+    - exporter
+    maintainers:
+    - email: nick-metz@web.de
+      name: wasfree
+    name: prometheus-pagerduty-exporter
+    sources:
+    - https://github.com/webdevops/pagerduty-exporter/
+    type: application
+    urls:
+    - https://wasfree.github.io/prometheus-pagerduty-exporter/prometheus-pagerduty-exporter-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 20.11.1
+    created: "2021-06-02T16:23:59.221989538+02:00"
     description: PagerDuty exporter for prometheus
     digest: 4ae62c16cb4c68fd48be5b08a76924f404143d77eb17c7009275e9ba4bb8cac8
     home: https://github.com/webdevops/pagerduty-exporter/
@@ -21,4 +41,4 @@ entries:
     urls:
     - https://wasfree.github.io/prometheus-pagerduty-exporter/prometheus-pagerduty-exporter-0.1.0.tgz
     version: 0.1.0
-generated: "2021-05-31T17:22:55.019345784+02:00"
+generated: "2021-06-02T16:23:59.221354775+02:00"
